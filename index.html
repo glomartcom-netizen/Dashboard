@@ -60,13 +60,60 @@ font-weight:bold;
 background:linear-gradient(180deg,#0d0d0d,#080808);
 border:1px solid rgba(255,215,0,0.25);
 box-shadow:0 0 25px rgba(255,215,0,0.08);
+padding:20px;
+border-radius:14px;
 }
 
+button{
+transition:.2s;
+}
+
+button:hover{
+background:#ffd700;
+transform:translateY(-2px);
+box-shadow:0 0 20px rgba(255,215,0,0.4);
+                         }
+ .adminPanel{
+margin-top:30px;
+background:linear-gradient(180deg,#111,#080808);
+padding:20px;
+border-radius:16px;
+border:1px solid rgba(255,215,0,0.5);
+box-shadow:0 0 35px rgba(255,215,0,0.15);
+display:none;
+}
+
+.adminPanel h3{
+color:gold;
+margin-bottom:15px;
+}
+
+.adminPanel button{
+background:gold;
+color:#000;
+margin-top:10px;
+}
+
+.adminPanel button:hover{
+transform:translateY(-2px);
+box-shadow:0 0 20px rgba(255,215,0,0.4);
+      } 
+.topbar{
+background:linear-gradient(90deg,#0a0a0a,#111);
+box-shadow:0 2px 15px rgba(255,215,0,0.1);
+   }
+
+@media(max-width:900px){
+.grid{
+grid-template-columns:1fr;
+}
+  }  
+  
 h3 i{
 color:gold;
 margin-right:6px;
 }                         
-.rightPanel{background:#0f1115;padding:20px;border-radius:14px;border:1px solid #1f2933;}
+
 .refBox{background:#000;padding:10px;border-radius:8px;border:1px solid #333;margin-top:10px;}
 .adminPanel{margin-top:30px;background:#111;padding:20px;border-radius:14px;border:1px solid gold;display:none;}
 table{width:100%;border-collapse:collapse;margin-top:10px;}
@@ -195,9 +242,25 @@ Direct Count
 <div class="adminPanel" id="admin">
 <h3>Admin Panel</h3>
 <div class="stats">
-<div class="stat">Users<br><span>0</span></div>
-<div class="stat">Total Stake<br><span>0</span></div>
-<div class="stat">Rewards<br><span>0</span></div>
+
+<div class="stat">
+<i class="fa-solid fa-users"></i>
+Users
+<span>0</span>
+</div>
+
+<div class="stat">
+<i class="fa-solid fa-wallet"></i>
+Total Stake
+<span>0</span>
+</div>
+
+<div class="stat">
+<i class="fa-solid fa-coins"></i>
+Rewards
+<span>0</span>
+</div>
+
 </div>
 <button>Pause Staking</button>
 <button>Adjust Rewards</button>
