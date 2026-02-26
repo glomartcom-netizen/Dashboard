@@ -3,152 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DimeX Dashboard v2</title>
+<title>DimeX Dashboard</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
 
 <style>
-body{
-margin:0;
-font-family:Poppins;
-background:#0b0e11;
-color:#fff;
-}
-
-.topbar{
-background:#111;
-padding:14px 20px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-border-bottom:1px solid #222;
-}
-
-.logo{
-color:gold;
-font-weight:600;
-font-size:20px;
-}
-
-.connectBtn{
-background:gold;
-border:none;
-padding:8px 14px;
-border-radius:6px;
-font-weight:600;
-cursor:pointer;
-}
-
-.container{
-max-width:1200px;
-margin:auto;
-padding:20px;
-}
-
-.stats{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:15px;
-margin-bottom:20px;
-}
-
-.stat{
-background:#11161c;
-padding:16px;
-border-radius:10px;
-border:1px solid #1f2933;
-}
-
-.stat h4{
-margin:0;
-font-size:12px;
-color:#aaa;
-}
-
-.stat p{
-margin:6px 0 0;
-font-size:18px;
-color:gold;
-}
-
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
-}
-
-.card{
-background:#11161c;
-border:1px solid #1f2933;
-border-radius:12px;
-padding:18px;
-}
-
-.title{
-color:gold;
-margin-bottom:12px;
-font-weight:600;
-}
-
-.input{
-width:100%;
-padding:12px;
-background:#000;
-border:1px solid #333;
-color:#fff;
-border-radius:8px;
-margin-top:8px;
-}
-
-.btn{
-background:gold;
-border:none;
-padding:12px;
-border-radius:8px;
-font-weight:600;
-cursor:pointer;
-width:100%;
-margin-top:10px;
-}
-
-.smallBtn{
-background:#222;
-border:1px solid gold;
-color:gold;
-padding:6px 10px;
-border-radius:6px;
-cursor:pointer;
-margin-top:8px;
-}
-
-.history{
-max-height:150px;
-overflow:auto;
-font-size:12px;
-color:#aaa;
-margin-top:10px;
-}
-
-.adminPanel{
-margin-top:30px;
-display:none;
-background:#1a1f25;
-border:1px solid gold;
-padding:20px;
-border-radius:12px;
-}
-
-.adminTitle{
-color:gold;
-margin-bottom:10px;
-font-weight:600;
-}
-
-@media(max-width:900px){
-.stats{grid-template-columns:1fr 1fr;}
-.grid{grid-template-columns:1fr;}
-}
+body{margin:0;font-family:Poppins;background:#000;color:#fff;}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:15px 20px;background:#0b0b0b;border-bottom:1px solid #222;}
+.logo{color:gold;font-size:22px;font-weight:600}
+.connectBtn{background:gold;border:none;padding:10px 18px;border-radius:8px;font-weight:bold;cursor:pointer;}
+.container{max-width:1200px;margin:auto;padding:20px;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.card{background:#0f1115;border:1px solid #1f2933;border-radius:14px;padding:20px;}
+h3{color:gold;margin-top:0}
+.row{margin:10px 0;display:flex;align-items:center;gap:10px;}
+input,select{width:100%;padding:12px;background:#000;border:1px solid #333;color:#fff;border-radius:8px;}
+button{padding:12px;border:none;border-radius:8px;background:gold;font-weight:bold;cursor:pointer;width:100%;margin-top:8px;}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:20px;}
+.stat{background:#0f1115;padding:15px;border-radius:12px;text-align:center;border:1px solid #1f2933;}
+.stat span{color:gold;font-size:18px}
+.rightPanel{background:#0f1115;padding:20px;border-radius:14px;border:1px solid #1f2933;}
+.refBox{background:#000;padding:10px;border-radius:8px;border:1px solid #333;margin-top:10px;}
+.adminPanel{margin-top:30px;background:#111;padding:20px;border-radius:14px;border:1px solid gold;display:none;}
+table{width:100%;border-collapse:collapse;margin-top:10px;}
+td,th{border:1px solid #333;padding:8px;text-align:center;}
 </style>
 </head>
 
@@ -160,123 +40,159 @@ font-weight:600;
 </div>
 
 <div class="container">
-
-<!-- USER STATS -->
-<div class="stats">
-
-<div class="stat"><h4>Total Stake</h4><p id="totalStake">0</p></div>
-<div class="stat"><h4>Daily Rewards</h4><p id="dailyRewards">0</p></div>
-<div class="stat"><h4>Total Earned</h4><p id="totalEarned">0</p></div>
-<div class="stat"><h4>Claimable</h4><p id="claimable">0</p></div>
-<div class="stat"><h4>Direct Income</h4><p id="directIncome">0</p></div>
-<div class="stat"><h4>Level Income</h4><p id="levelIncome">0</p></div>
-<div class="stat"><h4>Direct Count</h4><p id="directCount">0</p></div>
-<div class="stat"><h4>Team Count</h4><p id="teamCount">0</p></div>
-
-</div>
-
-<!-- STAKE + CLAIM -->
 <div class="grid">
 
+<!-- STAKE -->
 <div class="card">
-<div class="title"><i class="fa-solid fa-coins"></i> Stake</div>
+<h3><i class="fa-solid fa-coins"></i> Stake</h3>
 
-<select class="input">
-<option>USDT (BEP20)</option>
+<div class="row">Token</div>
+<select id="token">
+<option>USDT BEP20</option>
 <option>DMX</option>
 </select>
 
-<input class="input" placeholder="Enter Amount">
+<div class="row">Amount</div>
+<input id="amount" placeholder="Enter amount">
 
-<select class="input">
-<option>90 Days (0.20%)</option>
-<option>180 Days (0.25%)</option>
-<option>365 Days (0.30%)</option>
+<div class="row">Duration</div>
+<select id="duration">
+<option>90 days (0.20%)</option>
+<option>180 days (0.25%)</option>
+<option>365 days (0.30%)</option>
 </select>
 
-<button class="btn" onclick="approve()">Approve</button>
-<button class="btn" onclick="stake()">Stake</button>
-
+<button onclick="approve()">Approve</button>
+<button onclick="stake()">Stake</button>
 </div>
 
+<!-- REWARD -->
+<div class="rightPanel">
+<h3><i class="fa-solid fa-gift"></i> Rewards</h3>
+<div class="row">Claimable DMX</div>
+<input value="0.00" id="claimable">
+<button onclick="claim()">Claim</button>
+<button onclick="restake()">Restake</button>
+
+<div class="refBox">
+Referral:
+<input value="https://dimex.app/?ref=USER" readonly>
+</div>
+</div>
+
+<!-- DOWNLINE -->
 <div class="card">
-<div class="title"><i class="fa-solid fa-wallet"></i> Claim</div>
+<h3><i class="fa-solid fa-network-wired"></i> View Downline</h3>
+<button onclick="toggleDownline()">View Downline List</button>
 
-<p>Claimable: <span id="claimable2">0</span></p>
-
-<button class="btn" onclick="claim()">Claim</button>
-<button class="btn" onclick="restake()">Restake</button>
-
+<div id="downlineBox" style="display:none;">
+<table>
+<tr><th>Wallet</th><th>Level</th><th>Stake</th></tr>
+<tr><td>0x000...user1</td><td>1</td><td>5000 DMX</td></tr>
+<tr><td>0x000...user2</td><td>2</td><td>200 USDT</td></tr>
+</table>
+</div>
 </div>
 
-</div>
-
-<!-- REFERRAL -->
-<div class="card" style="margin-top:20px;">
-<div class="title"><i class="fa-solid fa-user-plus"></i> Referral</div>
-
-<input class="input" id="refLink" value="https://dimex.app?ref=USER">
-
-<button class="smallBtn" onclick="copyRef()">Copy Referral Link</button>
-<button class="smallBtn">View Downline</button>
-
+<!-- STATS -->
+<div class="stats">
+<div class="stat">Total Stake<br><span>0</span></div>
+<div class="stat">Daily Rewards<br><span>0</span></div>
+<div class="stat">Total Earned<br><span>0</span></div>
+<div class="stat">Direct Income<br><span>10%</span></div>
+<div class="stat">Level Income<br><span>20</span></div>
+<div class="stat">Team Count<br><span>0</span></div>
+<div class="stat">Direct Count<br><span>0</span></div>
 </div>
 
 <!-- CLAIM HISTORY -->
-<div class="card" style="margin-top:20px;">
-<div class="title"><i class="fa-solid fa-clock"></i> Claim History</div>
-<div class="history" id="history">No history yet</div>
+<div class="card">
+<h3><i class="fa-solid fa-clock"></i> Claim History</h3>
+<table>
+<tr><th>Date</th><th>Amount</th></tr>
+<tr><td>-</td><td>-</td></tr>
+</table>
 </div>
 
-<!-- ADMIN PANEL -->
-<div class="adminPanel" id="adminPanel">
+<!-- ADMIN -->
+<div class="adminPanel" id="admin">
+<h3>Admin Panel</h3>
+<div class="stats">
+<div class="stat">Users<br><span>0</span></div>
+<div class="stat">Total Stake<br><span>0</span></div>
+<div class="stat">Rewards<br><span>0</span></div>
+</div>
+<button>Pause Staking</button>
+<button>Adjust Rewards</button>
+</div>
 
-<div class="adminTitle"><i class="fa-solid fa-shield"></i> ADMIN PANEL</div>
+<!-- CONTRACT SECTION -->
+<div class="card">
+<h3><i class="fa-solid fa-file-contract"></i> Smart Contracts</h3>
 
-<p>Total Platform Stake: 0</p>
-<p>Total Users: 0</p>
-<p>Total Direct Volume: 0</p>
-<p>Total Level Volume: 0</p>
-<p>Reward Pool Balance: 0</p>
+<b>DMX Token</b>
+<div class="refBox">
+<input id="dmxAddress" value="PASTE AFTER DEPLOY" readonly>
+<button onclick="copyAddress('dmxAddress')">Copy</button>
+<a href="#" target="_blank">🔗 View</a>
+</div>
 
-<button class="btn">Pause Staking</button>
-<button class="btn">Resume Staking</button>
-<button class="btn">View All Users</button>
+<b>Staking Contract</b>
+<div class="refBox">
+<input id="stakeAddress" value="PASTE AFTER DEPLOY" readonly>
+<button onclick="copyAddress('stakeAddress')">Copy</button>
+<a href="#" target="_blank">🔗 View</a>
+</div>
+
+<b>LP</b>
+<div class="refBox">
+<input id="lpAddress" value="AFTER LP CREATED" readonly>
+<button onclick="copyAddress('lpAddress')">Copy</button>
+</div>
+
+<b>Router</b>
+<div class="refBox">
+<input id="routerAddress" value="0x10ED43C718714eb63d5aA57B78B54704E256024E" readonly>
+<button onclick="copyAddress('routerAddress')">Copy</button>
+<a href="https://bscscan.com/address/0x10ED43C718714eb63d5aA57B78B54704E256024E" target="_blank">🔗 View</a>
+</div>
 
 </div>
 
+</div>
 </div>
 
 <script>
-
-const ADMIN = "0x53ba2d865be750d0e2d4d01bcb0a46ec1684c46b";
+let adminWallet="0x53ba2d865be750d0e2d4d01bcb0a46ec1684c46b";
 
 async function connect(){
 if(window.ethereum){
-let accounts = await ethereum.request({method:"eth_requestAccounts"});
-let user = accounts[0];
+const provider=new ethers.providers.Web3Provider(window.ethereum);
+await provider.send("eth_requestAccounts",[]);
+const signer=provider.getSigner();
+let addr=await signer.getAddress();
 
-if(user.toLowerCase() == ADMIN.toLowerCase()){
-document.getElementById("adminPanel").style.display="block";
+if(addr.toLowerCase()==adminWallet.toLowerCase()){
+document.getElementById("admin").style.display="block";
 }
 }
 }
 
-function approve(){ alert("Approve triggered"); }
-function stake(){ alert("Stake submitted"); }
-function claim(){ addHistory("Claimed reward"); }
-function restake(){ addHistory("Restaked reward"); }
+function approve(){alert("Approve ready (connect after contract)")}
+function stake(){alert("Stake ready")}
+function claim(){alert("Claim ready")}
+function restake(){alert("Restake ready")}
 
-function addHistory(txt){
-let box=document.getElementById("history");
-box.innerHTML += "<div>"+txt+"</div>";
+function toggleDownline(){
+let box=document.getElementById("downlineBox");
+box.style.display=box.style.display==="none"?"block":"none";
 }
 
-function copyRef(){
-navigator.clipboard.writeText(document.getElementById("refLink").value);
-alert("Referral copied");
+function copyAddress(id){
+let val=document.getElementById(id).value;
+navigator.clipboard.writeText(val);
+alert("Copied");
 }
-
 </script>
 
 </body>
