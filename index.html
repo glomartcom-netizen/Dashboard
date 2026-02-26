@@ -11,23 +11,92 @@
 
 <style>
 body{margin:0;font-family:Poppins;background:#000;color:#fff;}
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:15px 20px;background:#0b0b0b;border-bottom:1px solid #222;}
-.logo{color:gold;font-size:22px;font-weight:600}
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 20px;
+background:linear-gradient(90deg,#0a0a0a,#111);
+border-bottom:1px solid #222;
+box-shadow:0 2px 15px rgba(255,215,0,0.1);
+}
+
 .logo{
+color:gold;
+font-size:22px;
+font-weight:600;
 letter-spacing:1px;
-  }
-.connectBtn{background:gold;border:none;padding:10px 18px;border-radius:8px;font-weight:bold;cursor:pointer;}
+}
+
 .connectBtn{
 background:linear-gradient(90deg,#ffd700,#ffb700);
 color:#000;
-  }
+border:none;
+padding:10px 18px;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
+}
+
 .container{max-width:1200px;margin:auto;padding:20px;}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-.card{background:#0f1115;border:1px solid #1f2933;border-radius:14px;padding:20px;}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+}
+
+.card{
+background:linear-gradient(180deg,#0d0d0d,#080808);
+border:1px solid rgba(255,215,0,0.25);
+border-radius:14px;
+padding:20px;
+box-shadow:0 0 25px rgba(255,215,0,0.08);
+}
+
+.rightPanel{
+background:linear-gradient(180deg,#0d0d0d,#080808);
+border:1px solid rgba(255,215,0,0.25);
+padding:20px;
+border-radius:14px;
+box-shadow:0 0 25px rgba(255,215,0,0.08);
+}
+
 h3{color:gold;margin-top:0}
+h3 i{color:gold;margin-right:6px;}
+
 .row{margin:10px 0;display:flex;align-items:center;gap:10px;}
-input,select{width:100%;padding:12px;background:#000;border:1px solid #333;color:#fff;border-radius:8px;}
-button{padding:12px;border:none;border-radius:8px;background:gold;font-weight:bold;cursor:pointer;width:100%;margin-top:8px;}.stats{
+
+input,select{
+width:100%;
+padding:12px;
+background:#000;
+border:1px solid #333;
+color:#fff;
+border-radius:8px;
+}
+
+button{
+padding:12px;
+border:none;
+border-radius:8px;
+background:gold;
+font-weight:bold;
+cursor:pointer;
+width:100%;
+margin-top:8px;
+transition:.2s;
+}
+
+button:hover{
+background:#ffd700;
+transform:translateY(-2px);
+box-shadow:0 0 20px rgba(255,215,0,0.4);
+}
+
+/* STATS */
+.stats{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
 gap:18px;
@@ -62,25 +131,8 @@ font-size:20px;
 font-weight:bold;
 }
 
-.card,
-.rightPanel{
-background:linear-gradient(180deg,#0d0d0d,#080808);
-border:1px solid rgba(255,215,0,0.25);
-box-shadow:0 0 25px rgba(255,215,0,0.08);
-padding:20px;
-border-radius:14px;
-}
-
-button{
-transition:.2s;
-}
-
-button:hover{
-background:#ffd700;
-transform:translateY(-2px);
-box-shadow:0 0 20px rgba(255,215,0,0.4);
-                         }
- .adminPanel{
+/* ADMIN */
+.adminPanel{
 margin-top:30px;
 background:linear-gradient(180deg,#111,#080808);
 padding:20px;
@@ -90,41 +142,32 @@ box-shadow:0 0 35px rgba(255,215,0,0.15);
 display:none;
 }
 
-.adminPanel h3{
-color:gold;
-margin-bottom:15px;
-}
+.adminPanel h3{color:gold;margin-bottom:15px;}
+.adminPanel button{background:gold;color:#000;margin-top:10px;}
 
-.adminPanel button{
-background:gold;
-color:#000;
+.refBox{
+background:#000;
+padding:10px;
+border-radius:8px;
+border:1px solid #333;
 margin-top:10px;
 }
 
-.adminPanel button:hover{
-transform:translateY(-2px);
-box-shadow:0 0 20px rgba(255,215,0,0.4);
-      } 
-  
-.topbar{
-background:linear-gradient(90deg,#0a0a0a,#111);
-box-shadow:0 2px 15px rgba(255,215,0,0.1);
-   }
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+}
+
+td,th{
+border:1px solid #333;
+padding:8px;
+text-align:center;
+}
 
 @media(max-width:900px){
-.grid{
-grid-template-columns:1fr;
+.grid{grid-template-columns:1fr;}
 }
-  }  
-  
-h3 i{
-color:gold;
-margin-right:6px;
-}                         
-
-.refBox{background:#000;padding:10px;border-radius:8px;border:1px solid #333;margin-top:10px;}
-table{width:100%;border-collapse:collapse;margin-top:10px;}
-td,th{border:1px solid #333;padding:8px;text-align:center;}
 </style>
 </head>
 
@@ -162,7 +205,7 @@ td,th{border:1px solid #333;padding:8px;text-align:center;}
 <button onclick="stake()">Stake</button>
 </div>
 
-<!-- REWARD -->
+<!-- REWARDS -->
 <div class="rightPanel">
 <h3><i class="fa-solid fa-gift"></i> Rewards</h3>
 <div class="row">Claimable DMX</div>
@@ -191,49 +234,13 @@ Referral:
 </div>
 
 <div class="stats">
-
-<div class="stat">
-<i class="fa-solid fa-wallet"></i>
-Total Stake
-<span id="totalStake">0</span>
-</div>
-
-<div class="stat">
-<i class="fa-solid fa-coins"></i>
-Daily Rewards
-<span id="daily">0</span>
-</div>
-
-<div class="stat">
-<i class="fa-solid fa-chart-line"></i>
-Total Earned
-<span id="earned">0</span>
-</div>
-
-<div class="stat">
-<i class="fa-solid fa-user-plus"></i>
-Direct Income
-<span>10%</span>
-</div>
-
-<div class="stat">
-<i class="fa-solid fa-network-wired"></i>
-Level Income
-<span>20 Levels</span>
-</div>
-
-<div class="stat">
-<i class="fa-solid fa-diagram-project"></i>
-Team Count
-<span>0</span>
-</div>
-
-<div class="stat">
-<i class="fa-solid fa-users"></i>
-Direct Count
-<span>0</span>
-</div>
-
+<div class="stat"><i class="fa-solid fa-wallet"></i>Total Stake<span id="totalStake">0</span></div>
+<div class="stat"><i class="fa-solid fa-coins"></i>Daily Rewards<span id="daily">0</span></div>
+<div class="stat"><i class="fa-solid fa-chart-line"></i>Total Earned<span id="earned">0</span></div>
+<div class="stat"><i class="fa-solid fa-user-plus"></i>Direct Income<span>10%</span></div>
+<div class="stat"><i class="fa-solid fa-network-wired"></i>Level Income<span>20 Levels</span></div>
+<div class="stat"><i class="fa-solid fa-diagram-project"></i>Team Count<span>0</span></div>
+<div class="stat"><i class="fa-solid fa-users"></i>Direct Count<span>0</span></div>
 </div>
 
 <!-- CLAIM HISTORY -->
@@ -249,31 +256,15 @@ Direct Count
 <div class="adminPanel" id="admin">
 <h3>Admin Panel</h3>
 <div class="stats">
-
-<div class="stat">
-<i class="fa-solid fa-users"></i>
-Users
-<span>0</span>
-</div>
-
-<div class="stat">
-<i class="fa-solid fa-wallet"></i>
-Total Stake
-<span>0</span>
-</div>
-
-<div class="stat">
-<i class="fa-solid fa-coins"></i>
-Rewards
-<span>0</span>
-</div>
-
+<div class="stat"><i class="fa-solid fa-users"></i>Users<span>0</span></div>
+<div class="stat"><i class="fa-solid fa-wallet"></i>Total Stake<span>0</span></div>
+<div class="stat"><i class="fa-solid fa-coins"></i>Rewards<span>0</span></div>
 </div>
 <button>Pause Staking</button>
 <button>Adjust Rewards</button>
 </div>
 
-<!-- CONTRACT SECTION -->
+<!-- CONTRACT -->
 <div class="card">
 <h3><i class="fa-solid fa-file-contract"></i> Smart Contracts</h3>
 
@@ -303,7 +294,6 @@ Rewards
 <button onclick="copyAddress('routerAddress')">Copy</button>
 <a href="https://bscscan.com/address/0x10ED43C718714eb63d5aA57B78B54704E256024E" target="_blank">🔗 View</a>
 </div>
-
 </div>
 
 </div>
@@ -318,14 +308,13 @@ const provider=new ethers.providers.Web3Provider(window.ethereum);
 await provider.send("eth_requestAccounts",[]);
 const signer=provider.getSigner();
 let addr=await signer.getAddress();
-
 if(addr.toLowerCase()==adminWallet.toLowerCase()){
 document.getElementById("admin").style.display="block";
 }
 }
 }
 
-function approve(){alert("Approve ready (connect after contract)")}
+function approve(){alert("Approve ready")}
 function stake(){alert("Stake ready")}
 function claim(){alert("Claim ready")}
 function restake(){alert("Restake ready")}
