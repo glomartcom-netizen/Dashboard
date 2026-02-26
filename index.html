@@ -20,10 +20,52 @@ body{margin:0;font-family:Poppins;background:#000;color:#fff;}
 h3{color:gold;margin-top:0}
 .row{margin:10px 0;display:flex;align-items:center;gap:10px;}
 input,select{width:100%;padding:12px;background:#000;border:1px solid #333;color:#fff;border-radius:8px;}
-button{padding:12px;border:none;border-radius:8px;background:gold;font-weight:bold;cursor:pointer;width:100%;margin-top:8px;}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:20px;}
-.stat{background:#0f1115;padding:15px;border-radius:12px;text-align:center;border:1px solid #1f2933;}
-.stat span{color:gold;font-size:18px}
+button{padding:12px;border:none;border-radius:8px;background:gold;font-weight:bold;cursor:pointer;width:100%;margin-top:8px;}.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+gap:18px;
+margin-top:25px;
+}
+
+.stat{
+background:linear-gradient(180deg,#111,#0a0a0a);
+border:1px solid rgba(255,215,0,0.25);
+border-radius:14px;
+padding:18px;
+text-align:center;
+box-shadow:0 0 20px rgba(255,215,0,0.08);
+transition:.2s;
+}
+
+.stat:hover{
+transform:translateY(-3px);
+box-shadow:0 0 30px rgba(255,215,0,0.18);
+}
+
+.stat i{
+color:gold;
+font-size:20px;
+margin-bottom:6px;
+display:block;
+}
+
+.stat span{
+color:gold;
+font-size:20px;
+font-weight:bold;
+}
+
+.card,
+.rightPanel{
+background:linear-gradient(180deg,#0d0d0d,#080808);
+border:1px solid rgba(255,215,0,0.25);
+box-shadow:0 0 25px rgba(255,215,0,0.08);
+}
+
+h3 i{
+color:gold;
+margin-right:6px;
+}                         
 .rightPanel{background:#0f1115;padding:20px;border-radius:14px;border:1px solid #1f2933;}
 .refBox{background:#000;padding:10px;border-radius:8px;border:1px solid #333;margin-top:10px;}
 .adminPanel{margin-top:30px;background:#111;padding:20px;border-radius:14px;border:1px solid gold;display:none;}
@@ -94,15 +136,50 @@ Referral:
 </div>
 </div>
 
-<!-- STATS -->
 <div class="stats">
-<div class="stat">Total Stake<br><span>0</span></div>
-<div class="stat">Daily Rewards<br><span>0</span></div>
-<div class="stat">Total Earned<br><span>0</span></div>
-<div class="stat">Direct Income<br><span>10%</span></div>
-<div class="stat">Level Income<br><span>20</span></div>
-<div class="stat">Team Count<br><span>0</span></div>
-<div class="stat">Direct Count<br><span>0</span></div>
+
+<div class="stat">
+<i class="fa-solid fa-wallet"></i>
+Total Stake
+<span id="totalStake">0</span>
+</div>
+
+<div class="stat">
+<i class="fa-solid fa-coins"></i>
+Daily Rewards
+<span id="daily">0</span>
+</div>
+
+<div class="stat">
+<i class="fa-solid fa-chart-line"></i>
+Total Earned
+<span id="earned">0</span>
+</div>
+
+<div class="stat">
+<i class="fa-solid fa-user-plus"></i>
+Direct Income
+<span>10%</span>
+</div>
+
+<div class="stat">
+<i class="fa-solid fa-network-wired"></i>
+Level Income
+<span>20 Levels</span>
+</div>
+
+<div class="stat">
+<i class="fa-solid fa-diagram-project"></i>
+Team Count
+<span>0</span>
+</div>
+
+<div class="stat">
+<i class="fa-solid fa-users"></i>
+Direct Count
+<span>0</span>
+</div>
+
 </div>
 
 <!-- CLAIM HISTORY -->
