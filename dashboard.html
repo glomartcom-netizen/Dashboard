@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DimeX Dashboard v2</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+body{
+margin:0;
+font-family:Poppins;
+background:#0b0e11;
+color:#fff;
+}
+
+.topbar{
+background:#111;
+padding:14px 20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:1px solid #222;
+}
+
+.logo{
+color:gold;
+font-weight:600;
+font-size:20px;
+}
+
+.connectBtn{
+background:gold;
+border:none;
+padding:8px 14px;
+border-radius:6px;
+font-weight:600;
+cursor:pointer;
+}
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:20px;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:15px;
+margin-bottom:20px;
+}
+
+.stat{
+background:#11161c;
+padding:16px;
+border-radius:10px;
+border:1px solid #1f2933;
+}
+
+.stat h4{
+margin:0;
+font-size:12px;
+color:#aaa;
+}
+
+.stat p{
+margin:6px 0 0;
+font-size:18px;
+color:gold;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+}
+
+.card{
+background:#11161c;
+border:1px solid #1f2933;
+border-radius:12px;
+padding:18px;
+}
+
+.title{
+color:gold;
+margin-bottom:12px;
+font-weight:600;
+}
+
+.input{
+width:100%;
+padding:12px;
+background:#000;
+border:1px solid #333;
+color:#fff;
+border-radius:8px;
+margin-top:8px;
+}
+
+.btn{
+background:gold;
+border:none;
+padding:12px;
+border-radius:8px;
+font-weight:600;
+cursor:pointer;
+width:100%;
+margin-top:10px;
+}
+
+.smallBtn{
+background:#222;
+border:1px solid gold;
+color:gold;
+padding:6px 10px;
+border-radius:6px;
+cursor:pointer;
+margin-top:8px;
+}
+
+.history{
+max-height:150px;
+overflow:auto;
+font-size:12px;
+color:#aaa;
+margin-top:10px;
+}
+
+.adminPanel{
+margin-top:30px;
+display:none;
+background:#1a1f25;
+border:1px solid gold;
+padding:20px;
+border-radius:12px;
+}
+
+.adminTitle{
+color:gold;
+margin-bottom:10px;
+font-weight:600;
+}
+
+@media(max-width:900px){
+.stats{grid-template-columns:1fr 1fr;}
+.grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+<div class="logo">DMX Dashboard</div>
+<button class="connectBtn" onclick="connect()">Connect Wallet</button>
+</div>
+
+<div class="container">
+
+<!-- USER STATS -->
+<div class="stats">
+
+<div class="stat"><h4>Total Stake</h4><p id="totalStake">0</p></div>
+<div class="stat"><h4>Daily Rewards</h4><p id="dailyRewards">0</p></div>
+<div class="stat"><h4>Total Earned</h4><p id="totalEarned">0</p></div>
+<div class="stat"><h4>Claimable</h4><p id="claimable">0</p></div>
+<div class="stat"><h4>Direct Income</h4><p id="directIncome">0</p></div>
+<div class="stat"><h4>Level Income</h4><p id="levelIncome">0</p></div>
+<div class="stat"><h4>Direct Count</h4><p id="directCount">0</p></div>
+<div class="stat"><h4>Team Count</h4><p id="teamCount">0</p></div>
+
+</div>
+
+<!-- STAKE + CLAIM -->
+<div class="grid">
+
+<div class="card">
+<div class="title"><i class="fa-solid fa-coins"></i> Stake</div>
+
+<select class="input">
+<option>USDT (BEP20)</option>
+<option>DMX</option>
+</select>
+
+<input class="input" placeholder="Enter Amount">
+
+<select class="input">
+<option>90 Days (0.20%)</option>
+<option>180 Days (0.25%)</option>
+<option>365 Days (0.30%)</option>
+</select>
+
+<button class="btn" onclick="approve()">Approve</button>
+<button class="btn" onclick="stake()">Stake</button>
+
+</div>
+
+<div class="card">
+<div class="title"><i class="fa-solid fa-wallet"></i> Claim</div>
+
+<p>Claimable: <span id="claimable2">0</span></p>
+
+<button class="btn" onclick="claim()">Claim</button>
+<button class="btn" onclick="restake()">Restake</button>
+
+</div>
+
+</div>
+
+<!-- REFERRAL -->
+<div class="card" style="margin-top:20px;">
+<div class="title"><i class="fa-solid fa-user-plus"></i> Referral</div>
+
+<input class="input" id="refLink" value="https://dimex.app?ref=USER">
+
+<button class="smallBtn" onclick="copyRef()">Copy Referral Link</button>
+<button class="smallBtn">View Downline</button>
+
+</div>
+
+<!-- CLAIM HISTORY -->
+<div class="card" style="margin-top:20px;">
+<div class="title"><i class="fa-solid fa-clock"></i> Claim History</div>
+<div class="history" id="history">No history yet</div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="adminPanel" id="adminPanel">
+
+<div class="adminTitle"><i class="fa-solid fa-shield"></i> ADMIN PANEL</div>
+
+<p>Total Platform Stake: 0</p>
+<p>Total Users: 0</p>
+<p>Total Direct Volume: 0</p>
+<p>Total Level Volume: 0</p>
+<p>Reward Pool Balance: 0</p>
+
+<button class="btn">Pause Staking</button>
+<button class="btn">Resume Staking</button>
+<button class="btn">View All Users</button>
+
+</div>
+
+</div>
+
+<script>
+
+const ADMIN = "0x53ba2d865be750d0e2d4d01bcb0a46ec1684c46b";
+
+async function connect(){
+if(window.ethereum){
+let accounts = await ethereum.request({method:"eth_requestAccounts"});
+let user = accounts[0];
+
+if(user.toLowerCase() == ADMIN.toLowerCase()){
+document.getElementById("adminPanel").style.display="block";
+}
+}
+}
+
+function approve(){ alert("Approve triggered"); }
+function stake(){ alert("Stake submitted"); }
+function claim(){ addHistory("Claimed reward"); }
+function restake(){ addHistory("Restaked reward"); }
+
+function addHistory(txt){
+let box=document.getElementById("history");
+box.innerHTML += "<div>"+txt+"</div>";
+}
+
+function copyRef(){
+navigator.clipboard.writeText(document.getElementById("refLink").value);
+alert("Referral copied");
+}
+
+</script>
+
+</body>
+</html>
