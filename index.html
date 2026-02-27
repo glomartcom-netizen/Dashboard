@@ -8,6 +8,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+ <!-- WalletConnect (ADD HERE) -->
+<script src="https://unpkg.com/@walletconnect/ethereum-provider@2.11.0/dist/index.umd.js"></script>
 
 <style>
 body{margin:0;font-family:Poppins;background:#000;color:#fff;}
@@ -230,24 +232,51 @@ grid-template-columns:1fr;
 </div>
 
 <script>
+
+let provider;
+let signer;
 let adminWallet="0x53ba2d865be750d0e2d4d01bcb0a46ec1684c46b";
 
 async function connect(){
-if(window.ethereum){
-const provider=new ethers.providers.Web3Provider(window.ethereum);
-await provider.send("eth_requestAccounts",[]);
-const signer=provider.getSigner();
-let addr=await signer.getAddress();
 
-/* referral auto */
+// 1️⃣ Injected wallet (MetaMask browser / Desktop extension)
+if (window.ethereum) {
+    provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    signer = provider.getSigner();
+    const addr = await signer.getAddress();
+    afterConnect(addr);
+    return;
+}
+
+// 2️⃣ WalletConnect (Mobile / Tablet / Any wallet)
+const wcProvider = await window.EthereumProvider.init({
+    projectId: "30cfec2651a089d32f1a5b62b3aa8c81",
+    chains: [56], // BSC Mainnet
+    showQrModal: true,
+});
+
+await wcProvider.enable();
+
+provider = new ethers.providers.Web3Provider(wcProvider);
+signer = provider.getSigner();
+const addr = await signer.getAddress();
+
+afterConnect(addr);
+}
+
+function afterConnect(addr){
+
+// referral auto
 document.getElementById("refLink").value =
-"https://dimex.app/?ref="+addr;
+"https://dimex.app/?ref=" + addr;
 
-/* admin */
+// admin detect
 if(addr.toLowerCase()==adminWallet.toLowerCase()){
 document.getElementById("admin").style.display="block";
 }
-}
+
+alert("Connected: " + addr);
 }
 
 function approve(){alert("Approve ready")}
@@ -276,6 +305,7 @@ let val=document.getElementById("refLink").value;
 navigator.clipboard.writeText(val);
 alert("Copied");
 }
+
 </script>
 
 </body>
