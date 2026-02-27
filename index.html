@@ -239,7 +239,7 @@ let adminWallet="0x53ba2d865be750d0e2d4d01bcb0a46ec1684c46b";
 
 async function connect(){
 
-// 1️⃣ Injected wallet (MetaMask browser / Desktop extension)
+// MetaMask / Injected
 if (window.ethereum) {
     provider = new ethers.providers.Web3Provider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
@@ -249,29 +249,30 @@ if (window.ethereum) {
     return;
 }
 
-// 2️⃣ WalletConnect (Mobile / Tablet / Any wallet)
-const wcProvider = await window.EthereumProvider.init({
-    projectId: "30cfec2651a089d32f1a5b62b3aa8c81",
-    chains: [56], // BSC Mainnet
-    showQrModal: true,
-});
+// WalletConnect v2
+if (window.EthereumProvider) {
 
-await wcProvider.enable();
+    const wc = await window.EthereumProvider.init({
+        projectId: "30cfec2651a089d32f1a5b62b3aa8c81",
+        chains: [56], // BSC Mainnet
+        showQrModal: true,
+    });
 
-provider = new ethers.providers.Web3Provider(wcProvider);
-signer = provider.getSigner();
-const addr = await signer.getAddress();
+    await wc.connect();
 
-afterConnect(addr);
+    provider = new ethers.providers.Web3Provider(wc);
+    signer = provider.getSigner();
+    const addr = await signer.getAddress();
+
+    afterConnect(addr);
+}
 }
 
 function afterConnect(addr){
 
-// referral auto
 document.getElementById("refLink").value =
 "https://dimex.app/?ref=" + addr;
 
-// admin detect
 if(addr.toLowerCase()==adminWallet.toLowerCase()){
 document.getElementById("admin").style.display="block";
 }
