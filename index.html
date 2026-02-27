@@ -239,32 +239,35 @@ let adminWallet="0x53ba2d865be750d0e2d4d01bcb0a46ec1684c46b";
 
 async function connect(){
 
-// MetaMask / Injected
+// Injected wallet (MetaMask app browser / extension)
 if (window.ethereum) {
-    provider = new ethers.providers.Web3Provider(window.ethereum);
-    await provider.send("eth_requestAccounts", []);
-    signer = provider.getSigner();
-    const addr = await signer.getAddress();
-    afterConnect(addr);
-    return;
+    try {
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        signer = provider.getSigner();
+        const addr = await signer.getAddress();
+        afterConnect(addr);
+        return;
+    } catch(e){
+        console.log("Injected failed, fallback to WalletConnect");
+    }
 }
 
-// WalletConnect v2
-if (window.EthereumProvider) {
+// WalletConnect v2 fallback
+const wc = await window.EthereumProvider.init({
+    projectId: "30cfec2651a089d32f1a5b62b3aa8c81",
+    chains: [56],
+    optionalChains: [56],
+    showQrModal: true,
+});
 
-    const wc = await window.EthereumProvider.init({
-        projectId: "30cfec2651a089d32f1a5b62b3aa8c81",
-        chains: [56], // BSC Mainnet
-        showQrModal: true,
-    });
+await wc.connect();
 
-    await wc.connect();
+provider = new ethers.providers.Web3Provider(wc);
+signer = provider.getSigner();
+const addr = await signer.getAddress();
 
-    provider = new ethers.providers.Web3Provider(wc);
-    signer = provider.getSigner();
-    const addr = await signer.getAddress();
-
-    afterConnect(addr);
+afterConnect(addr);
 }
 }
 
