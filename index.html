@@ -7,309 +7,238 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
-<script src="https://unpkg.com/@walletconnect/ethereum-provider@2.6.2/dist/index.umd.js"></script>
- 
+<script src="https://unpkg.com/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+
 <style>
-body{margin:0;font-family:Poppins;background:#000;color:#fff;}
-
-.topbar{
-display:flex;justify-content:space-between;align-items:center;
-padding:15px 20px;background:#0b0b0b;border-bottom:1px solid #222;
-}
-
-.logo{color:gold;font-size:22px;font-weight:600;letter-spacing:1px}
-
-.connectBtn{
-background:linear-gradient(90deg,#ffd700,#ffb700);
-color:#000;border:none;padding:10px 18px;border-radius:8px;font-weight:bold;cursor:pointer;
-}
-
-.container{max-width:1200px;margin:auto;padding:20px;}
-
-.stats{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-gap:15px;
-margin-bottom:25px;
-}
-
-.stat{
-background:linear-gradient(180deg,#111,#0a0a0a);
-border:1px solid rgba(255,215,0,0.25);
-border-radius:14px;padding:18px;text-align:center;
-box-shadow:0 0 20px rgba(255,215,0,0.08);
-}
-
+body{margin:0;font-family:Poppins;background:#000;color:#fff}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:15px 20px;background:#0b0b0b;border-bottom:1px solid #222}
+.logoWrap{display:flex;align-items:center;gap:10px}
+.logoWrap img{width:40px}
+.logoText{color:gold;font-size:20px;font-weight:600}
+.connectBtn{background:linear-gradient(90deg,#ffd700,#ffb700);color:#000;border:none;padding:10px 18px;border-radius:8px;font-weight:bold;cursor:pointer}
+.container{max-width:1200px;margin:auto;padding:20px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;margin-bottom:25px}
+.stat{background:#111;border:1px solid rgba(255,215,0,0.3);border-radius:14px;padding:18px;text-align:center}
 .stat i{color:gold;font-size:20px;margin-bottom:6px;display:block}
 .stat span{color:gold;font-size:20px;font-weight:bold}
-
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-
-.card{
-background:linear-gradient(180deg,#0d0d0d,#080808);
-border:1px solid rgba(255,215,0,0.25);
-box-shadow:0 0 25px rgba(255,215,0,0.08);
-padding:20px;border-radius:14px;
-}
-
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.card{background:#111;border:1px solid rgba(255,215,0,0.3);padding:20px;border-radius:14px}
 h3{color:gold;margin-top:0}
-h3 i{color:gold;margin-right:6px;}
-  
-*{
-box-sizing:border-box;
-   }
-input,select{
-width:100%;
-max-width:100%;
-padding:12px;
-background:#000;
-border:1px solid #333;
-color:#fff;
-border-radius:8px;
-}
-  
-button{
-padding:12px;border:none;border-radius:8px;background:gold;font-weight:bold;
-cursor:pointer;width:100%;margin-top:8px;
-}
-
-.refBox{background:#000;padding:10px;border-radius:8px;border:1px solid #333;margin-top:10px;}
-
-.adminPanel{
-margin-top:30px;background:linear-gradient(180deg,#111,#080808);
-padding:20px;border-radius:16px;border:1px solid rgba(255,215,0,0.5);
-display:none;
-}
-
-table{width:100%;border-collapse:collapse;margin-top:10px;}
-td,th{border:1px solid #333;padding:8px;text-align:center;}
-
-@media(max-width:500px){
-.stats{
-grid-template-columns:1fr;
-}
-}
+input,select{width:100%;padding:12px;background:#000;border:1px solid #333;color:#fff;border-radius:8px;margin-top:10px}
+button{padding:12px;border:none;border-radius:8px;background:gold;font-weight:bold;cursor:pointer;width:100%;margin-top:10px}
+button:disabled{opacity:0.6;cursor:not-allowed}
+.contractRow{display:flex;justify-content:space-between;align-items:center;background:#000;padding:12px;margin:8px 0;border:1px solid #222;border-radius:8px}
+.contractRow button{width:auto;padding:8px 14px}
+.adminPanel{display:none;margin-top:20px}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
 
 <body>
 
 <div class="topbar">
-<div class="logo">DMX Dashboard</div>
-<button class="connectBtn" onclick="connect()">Connect Wallet</button>
+<div class="logoWrap">
+<img src="https://i.ibb.co/HpqwGFqt/logo.png">
+<div class="logoText">DimeX Dashboard</div>
+</div>
+<button class="connectBtn" onclick="connectWallet()">Connect Wallet</button>
 </div>
 
 <div class="container">
 
-<!-- STATS TOP -->
-<div class="stats">
+<div id="walletDisplay" style="margin-bottom:15px;color:gold"></div>
 
+<div class="stats">
 <div class="stat"><i class="fa-solid fa-wallet"></i>Total Stake<span id="totalStake">0</span></div>
-<div class="stat"><i class="fa-solid fa-coins"></i>Daily Rewards<span id="daily">0</span></div>
-<div class="stat"><i class="fa-solid fa-chart-line"></i>Total Earned<span id="earned">0</span></div>
+<div class="stat"><i class="fa-solid fa-bolt"></i>Daily Reward<span id="dailyReward">0</span></div>
+<div class="stat"><i class="fa-solid fa-chart-line"></i>Total Earned<span id="totalIncome">0</span></div>
 <div class="stat"><i class="fa-solid fa-user-plus"></i>Direct Income<span id="directIncome">0</span></div>
 <div class="stat"><i class="fa-solid fa-sitemap"></i>Level Income<span id="levelIncome">0</span></div>
 <div class="stat"><i class="fa-solid fa-users"></i>Team Count<span id="teamCount">0</span></div>
-
 </div>
 
 <div class="grid">
 
-<!-- STAKE -->
 <div class="card">
-<h3><i class="fa-solid fa-coins"></i> Stake</h3>
-
+<h3>Stake</h3>
 <select id="token">
-<option>USDT BEP20</option>
-<option>DMX</option>
+<option value="USDT">USDT</option>
+<option value="DMX">DMX</option>
 </select>
-
 <input id="amount" placeholder="Enter amount">
-
 <select id="duration">
-<option>90 days (0.20%)</option>
-<option>180 days (0.25%)</option>
-<option>365 days (0.30%)</option>
+<option value="90">90 Days</option>
+<option value="180">180 Days</option>
+<option value="365">365 Days</option>
 </select>
-
-<button onclick="approve()">Approve</button>
-<button onclick="stake()">Stake</button>
+<button id="approveBtn" onclick="approveToken()">Approve</button>
+<button id="stakeBtn" onclick="stakeToken()">Stake</button>
 </div>
 
-<!-- CLAIM -->
 <div class="card">
-<h3><i class="fa-solid fa-gift"></i> Claim</h3>
-
-<input value="0.00" id="claimable">
-<button onclick="claim()">Claim</button>
-<button onclick="restake()">Restake</button>
+<h3>Claim</h3>
+<input id="claimable" readonly>
+<button id="claimBtn" onclick="claimRewards()">Claim</button>
+<button id="restakeBtn" onclick="restakeRewards()">Restake</button>
 </div>
 
-<!-- REFERRAL -->
+</div>
+
 <div class="card">
-<h3><i class="fa-solid fa-link"></i> Referral Link</h3>
-
-<input id="refLink" readonly value="Connect wallet first">
-<button onclick="copyRef()">Copy Link</button>
+<h3>Ecosystem</h3>
+<div class="contractRow"><span>DMX Token</span><button onclick="viewAddress(DMX)">View</button></div>
+<div class="contractRow"><span>Staking</span><button onclick="viewAddress(STAKING_ADDRESS)">View</button></div>
+<div class="contractRow"><span>LP Pair</span><button onclick="viewAddress(LP)">View</button></div>
+<div class="contractRow"><span>Router</span><button onclick="viewAddress(ROUTER)">View</button></div>
 </div>
 
-<!-- DOWNLINE -->
+<div class="adminPanel" id="adminPanel">
 <div class="card">
-<h3><i class="fa-solid fa-network-wired"></i> Downline</h3>
-<button onclick="toggleDownline()">View Downline</button>
-
-<div id="downlineBox" style="display:none;">
-<table>
-<tr><th>Wallet</th><th>Stake</th></tr>
-<tr><td>-</td><td>-</td></tr>
-</table>
-</div>
-</div>
-
-</div>
-
-<!-- CLAIM HISTORY -->
-<div class="card">
-<h3><i class="fa-solid fa-clock"></i> Claim History</h3>
-
-<button onclick="toggleHistory()">View Claim History</button>
-
-<div id="historyBox" style="display:none;">
-<table>
-<tr><th>Date</th><th>Amount</th></tr>
-<tr><td>-</td><td>-</td></tr>
-</table>
-</div>
-
-</div>
-
-<!-- ADMIN -->
-<div class="adminPanel" id="admin">
 <h3>Admin Panel</h3>
-
-<div class="stats">
-<div class="stat"><i class="fa-solid fa-users"></i>Users<span>0</span></div>
-<div class="stat"><i class="fa-solid fa-wallet"></i>Total Stake<span>0</span></div>
-<div class="stat"><i class="fa-solid fa-coins"></i>Rewards<span>0</span></div>
+<div>Admin Connected</div>
 </div>
-
-<button>Pause Staking</button>
-<button>Adjust Rewards</button>
-</div>
-
-<!-- CONTRACTS -->
-<div class="card">
-<h3><i class="fa-solid fa-file-contract"></i> Contracts</h3>
-
-<b>DMX Token</b>
-<div class="refBox">
-<input id="dmxAddress" value="PASTE AFTER DEPLOY" readonly>
-<button onclick="copyAddress('dmxAddress')">Copy</button>
-</div>
-
-<b>Staking</b>
-<div class="refBox">
-<input id="stakeAddress" value="PASTE AFTER DEPLOY" readonly>
-<button onclick="copyAddress('stakeAddress')">Copy</button>
-</div>
-
-<b>LP</b>
-<div class="refBox">
-<input id="lpAddress" value="AFTER LP" readonly>
-<button onclick="copyAddress('lpAddress')">Copy</button>
-</div>
-
-<b>Router</b>
-<div class="refBox">
-<input id="routerAddress" value="0x10ED43C718714eb63d5aA57B78B54704E256024E" readonly>
-<button onclick="copyAddress('routerAddress')">Copy</button>
-</div>
-
 </div>
 
 </div>
 
 <script>
 
-let provider;
-let signer;
-let adminWallet="0x53ba2d865be750d0e2d4d01bcb0a46ec1684c46b";
+let provider, signer, userAddress;
 
-async function connect(){
+const ADMIN="0x53ba2d865be750d0e2d4d01bcb0a46ec1684c46b";
+const USDT="0x55d398326f99059fF775485246999027B3197955";
+const DMX="PUT_DMX_TOKEN";
+const STAKING_ADDRESS="PUT_STAKING_CONTRACT";
+const LP="PUT_LP_ADDRESS";
+const ROUTER="0x10ED43C718714eb63d5aA57B78B54704E256024E";
 
-// 1️⃣ MetaMask / Injected
-if (window.ethereum) {
-    try {
-        provider = new ethers.providers.Web3Provider(window.ethereum);
-        await provider.send("eth_requestAccounts", []);
-        signer = provider.getSigner();
-        const addr = await signer.getAddress();
-        afterConnect(addr);
-        return;
-    } catch(e){
-        console.log(e);
-    }
+const ERC20_ABI=["function approve(address,uint256) external returns(bool)"];
+const STAKE_ABI=[
+"function stakeUSDT(uint256,uint256,address) external",
+"function stakeDMX(uint256,uint256,address) external",
+"function claim() external",
+"function restake() external",
+"function getUserInfo(address) view returns(uint256,uint256,uint256,uint256,uint256,uint256)",
+"function getClaimable(address) view returns(uint256)"
+];
+
+function disableBtn(id,state){document.getElementById(id).disabled=state;}
+
+function validateAmount(val){
+if(!val || isNaN(val)) return false;
+if(Number(val)<=0) return false;
+return true;
 }
 
-// 2️⃣ WalletConnect check
-if (typeof window.EthereumProvider === "undefined") {
-    alert("WalletConnect not loaded");
-    return;
+function convertDuration(days){
+return Number(days)*24*60*60;
 }
 
-const wc = await window.EthereumProvider.init({
-    projectId: "30cfec2651a089d32f1a5b62b3aa8c81",
-    chains: [56],
-    showQrModal: true,
-});
-
-await wc.connect();
-
-provider = new ethers.providers.Web3Provider(wc);
-signer = provider.getSigner();
-const addr = await signer.getAddress();
-
-afterConnect(addr);
+async function connectWallet(){
+try{
+if(window.ethereum){
+provider=new ethers.providers.Web3Provider(window.ethereum);
+await provider.send("eth_requestAccounts",[]);
+window.ethereum.on("chainChanged",()=>location.reload());
+}else{
+const wc=new WalletConnectProvider.default({rpc:{56:"https://bsc-dataseed.binance.org/"}});
+await wc.enable();
+provider=new ethers.providers.Web3Provider(wc);
 }
- 
-function afterConnect(addr){
-
-document.getElementById("refLink").value =
-"https://dimex.app/?ref=" + addr;
-
-if(addr.toLowerCase()==adminWallet.toLowerCase()){
-document.getElementById("admin").style.display="block";
+const network=await provider.getNetwork();
+if(network.chainId!==56){alert("Switch to BSC Mainnet");return;}
+signer=provider.getSigner();
+userAddress=await signer.getAddress();
+document.getElementById("walletDisplay").innerHTML="Connected: "+userAddress;
+if(userAddress.toLowerCase()===ADMIN.toLowerCase()){
+document.getElementById("adminPanel").style.display="block";
 }
-
-alert("Connected: " + addr);
+await loadUserData();
+}catch(e){alert(e.message||"Connection failed");}
 }
 
-function approve(){alert("Approve ready")}
-function stake(){alert("Stake ready")}
-function claim(){alert("Claim ready")}
-function restake(){alert("Restake ready")}
-
-function toggleDownline(){
-let box=document.getElementById("downlineBox");
-box.style.display=box.style.display==="none"?"block":"none";
+async function loadUserData(){
+try{
+const contract=new ethers.Contract(STAKING_ADDRESS,STAKE_ABI,provider);
+const info=await contract.getUserInfo(userAddress);
+const claimable=await contract.getClaimable(userAddress);
+document.getElementById("totalStake").innerHTML=ethers.utils.formatUnits(info[0],18);
+document.getElementById("dailyReward").innerHTML=ethers.utils.formatUnits(info[1],18);
+document.getElementById("totalIncome").innerHTML=ethers.utils.formatUnits(info[2],18);
+document.getElementById("directIncome").innerHTML=ethers.utils.formatUnits(info[3],18);
+document.getElementById("levelIncome").innerHTML=ethers.utils.formatUnits(info[4],18);
+document.getElementById("teamCount").innerHTML=info[5];
+document.getElementById("claimable").value=ethers.utils.formatUnits(claimable,18);
+}catch(e){console.log("Read failed",e);}
 }
 
-function toggleHistory(){
-let box=document.getElementById("historyBox");
-box.style.display = box.style.display === "none" ? "block" : "none";
+async function approveToken(){
+try{
+const amount=document.getElementById("amount").value;
+if(!validateAmount(amount)) return alert("Invalid amount");
+disableBtn("approveBtn",true);
+const tokenType=document.getElementById("token").value;
+const tokenAddr=tokenType==="USDT"?USDT:DMX;
+const token=new ethers.Contract(tokenAddr,ERC20_ABI,signer);
+const tx=await token.approve(STAKING_ADDRESS,ethers.utils.parseUnits(amount,18));
+await tx.wait();
+alert("Approved");
+}catch(e){alert(e.reason||e.message);}
+disableBtn("approveBtn",false);
 }
 
-function copyAddress(id){
-let val=document.getElementById(id).value;
-navigator.clipboard.writeText(val);
-alert("Copied");
+async function stakeToken(){
+try{
+const amount=document.getElementById("amount").value;
+if(!validateAmount(amount)) return alert("Invalid amount");
+disableBtn("stakeBtn",true);
+const duration=convertDuration(document.getElementById("duration").value);
+const tokenType=document.getElementById("token").value;
+const urlParams=new URLSearchParams(window.location.search);
+const ref=urlParams.get("ref")||ethers.constants.AddressZero;
+const contract=new ethers.Contract(STAKING_ADDRESS,STAKE_ABI,signer);
+let tx;
+if(tokenType==="USDT"){
+tx=await contract.stakeUSDT(ethers.utils.parseUnits(amount,18),duration,ref);
+}else{
+tx=await contract.stakeDMX(ethers.utils.parseUnits(amount,18),duration,ref);
+}
+await tx.wait();
+alert("Stake successful");
+await loadUserData();
+}catch(e){alert(e.reason||e.message);}
+disableBtn("stakeBtn",false);
 }
 
-function copyRef(){
-let val=document.getElementById("refLink").value;
-navigator.clipboard.writeText(val);
-alert("Copied");
+async function claimRewards(){
+try{
+disableBtn("claimBtn",true);
+const contract=new ethers.Contract(STAKING_ADDRESS,STAKE_ABI,signer);
+const tx=await contract.claim();
+await tx.wait();
+alert("Claimed");
+await loadUserData();
+}catch(e){alert(e.reason||e.message);}
+disableBtn("claimBtn",false);
+}
+
+async function restakeRewards(){
+try{
+disableBtn("restakeBtn",true);
+const contract=new ethers.Contract(STAKING_ADDRESS,STAKE_ABI,signer);
+const tx=await contract.restake();
+await tx.wait();
+alert("Restaked");
+await loadUserData();
+}catch(e){alert(e.reason||e.message);}
+disableBtn("restakeBtn",false);
+}
+
+function viewAddress(addr){
+if(!addr||addr.includes("PUT")){alert("Address not set");return;}
+window.open("https://bscscan.com/address/"+addr,"_blank");
 }
 
 </script>
