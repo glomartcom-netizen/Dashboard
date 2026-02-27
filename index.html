@@ -89,9 +89,10 @@ display:none;
 table{width:100%;border-collapse:collapse;margin-top:10px;}
 td,th{border:1px solid #333;padding:8px;text-align:center;}
 
-@media(max-width:600px){
+@media(max-width:500px){
 .stats{
-grid-template-columns:1fr 1fr;}
+grid-template-columns:1fr;
+}
 }
 </style>
 </head>
@@ -259,9 +260,9 @@ function stake(){alert("Stake ready")}
 function claim(){alert("Claim ready")}
 function restake(){alert("Restake ready")}
 
-function toggleDownline(){
-let box=document.getElementById("downlineBox");
-box.style.display=box.style.display==="none"?"block":"none";
+function toggleHistory(){
+let box=document.getElementById("historyBox");
+box.style.display = box.style.display === "none" ? "block" : "none";
 }
 
 function copyAddress(id){
