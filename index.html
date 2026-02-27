@@ -239,7 +239,7 @@ let adminWallet="0x53ba2d865be750d0e2d4d01bcb0a46ec1684c46b";
 
 async function connect(){
 
-// Injected wallet (MetaMask app browser / extension)
+// 1️⃣ MetaMask / Injected
 if (window.ethereum) {
     try {
         provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -249,15 +249,19 @@ if (window.ethereum) {
         afterConnect(addr);
         return;
     } catch(e){
-        console.log("Injected failed, fallback to WalletConnect");
+        console.log(e);
     }
 }
 
-// WalletConnect v2 fallback
+// 2️⃣ WalletConnect check
+if (typeof window.EthereumProvider === "undefined") {
+    alert("WalletConnect not loaded");
+    return;
+}
+
 const wc = await window.EthereumProvider.init({
     projectId: "30cfec2651a089d32f1a5b62b3aa8c81",
     chains: [56],
-    optionalChains: [56],
     showQrModal: true,
 });
 
@@ -269,7 +273,7 @@ const addr = await signer.getAddress();
 
 afterConnect(addr);
 }
-
+ 
 function afterConnect(addr){
 
 document.getElementById("refLink").value =
